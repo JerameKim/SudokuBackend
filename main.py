@@ -20,43 +20,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-db = []
 class Puzzle(BaseModel): 
     values: list
 
-class City(BaseModel): 
-    name: str
-    timezone: str
-
-@app.get('/')
-def index(): 
-    return {'key' : 'value'}
-@app.get('/cities')
-def get_cities(): 
-    results = []
-    for city in db: 
-        r = requests.get(f'http://worldtimeapi.org/api/timezone/{city["timezone"]}')
-        current_time = r.json()['datetime']
-        results.append({'name' :city['name'], 'timezone': city['timezone'], 'current_time': current_time})
-    return results
-
-@app.get('/cities/{city_id}')
-def get_city(city_id: int): 
-    city = db[city_id -1]
-    r = requests.get(f'http://worldtimeapi.org/api/timezone/{city["timezone"]}')
-    current_time = r.json()['datetime']
-
-    return {'name' :city['name'], 'timezone': city['timezone'], 'current_time': current_time}
-
-@app.post('/cities')
-def creat_city(city: City): 
-    db.append(city.dict()) # insert into database 
-    return db[-1] # return last item in database 
-
-@app.delete('/cities')
-def delete_city(city_id: int): 
-    db.pop(city_id -1)
-    return {}
 
 # get an unsolved puzzle 
 @app.get('/puzzle')
@@ -152,17 +118,7 @@ puzzle1 = [
     6,2,7,3,4,9,1,8,5,
     1,9,8,2,5,6,3,4,7
 ]
-# puzzle2 = [ 
-#     "",1,9,4,"",7,8,5,"",
-#     7,"",6,9,1,5,2,"",4,
-#     4,5,"",6,8,3,"",1,9,
-#     9,7,4,"",3,"",5,6,8,
-#     "",6,1,5,"",8,4,7,"",
-#     8,3,5,"",6,"",9,2,1,
-#     5,4,"",8,7,1,"",9,2,
-#     6,"",7,3,4,9,1,"",5,
-#     "",9,8,2,"",6,3,4,""
-# ]
+
 puzzle2= [ 
     "", "", "", 1, "", "", 4, 7,  "", 
     "",  "", 2, "",  "", 6,  "",  "", 1,
